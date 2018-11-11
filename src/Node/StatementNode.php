@@ -5,12 +5,12 @@ namespace SK\Compiler\Node;
 
 class StatementNode extends Node
 {
-    private $previousStatement;
-    private $nextStatement;
+    private $statement1;
+    private $statement2;
 
-    public function __construct(Node $previousStatement, Node $nextStatement)
+    public function __construct(Node $statement1, Node $statement2)
     {
-        $this->previousStatement = $previousStatement;
-        $this->nextStatement = $nextStatement;
+        $this->statement1 = $statement1;
+        $this->statement2 = $statement2;
     }
 }
