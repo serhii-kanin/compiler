@@ -8,6 +8,7 @@ use SK\Compiler\Node\ConstNode;
 use SK\Compiler\Node\ConditionNode;
 use SK\Compiler\Node\FunctionArgumentNode;
 use SK\Compiler\Node\FunctionDeclarationNode;
+use SK\Compiler\Node\ReturnNode;
 use SK\Compiler\Node\LogicalOperatorNode;
 use SK\Compiler\Node\Node;
 use SK\Compiler\Node\NullNode;
@@ -64,6 +65,14 @@ class Parser
             }
             $this->lexer->moveToNext();
             $statement = $this->functionDeclaration();
+        } elseif ($this->lexer->getToken()->isReturn()) {
+            $this->lexer->moveToNext();
+            $statement = new ReturnNode($this->expression());
+            if (!$this->lexer->getToken()->isSemicolon()) {
+                throw new UnexpectedSymbolException($this->lexer->getToken(), '; expected');
+            }
+            $this->lexer->moveToNext();
+
         } elseif($this->lexer->getToken()->isWhile()) {
             $statement = $this->while();
         } elseif($this->lexer->getToken()->isDataTypeKeyword()) {
@@ -86,7 +95,7 @@ class Parser
             return $statement;
         }
 
-        return new StatementNode($statement, $this->statement());
+        return new StatementNode($statement, $this->statement($inCurlyBrackets));
     }
 
     /**
@@ -433,8 +442,9 @@ class Parser
 
 
 stmt -> if <enclosed_expr> { <stmt> }
-| if <enclosed_expr> { <stmt> } else { <stmt> } | while <enclosed_expr> { <stmt> } | <var_declaration> | <expr>; | <stmt>;
+| if <enclosed_expr> { <stmt> } else { <stmt> } | while <enclosed_expr> { <stmt> } | <var_declaration> | <expr>; | <stmt>
 | <function_declaration>
+| return <expr>;
 
 function_arguments -> <data_type_keyword> <id>, <function_arguments> | <data_type_keyword> <id>
 return_type_keyword -> <data_type_keyword> | void

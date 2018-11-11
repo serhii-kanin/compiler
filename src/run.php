@@ -5,7 +5,7 @@ include "../vendor/autoload.php";
 
 
 $lexer = new \SK\Compiler\Lexer('
-function testFunc(): void { int sukaint = 1 + 1;}
+function testFunc(): void { int sukaint = 1 + 1; int suka2 = 1;return suka2 + sukaint;}
 string stringVar = "12332\"31";
 bool boolVar = false;
 int false1 = 2;

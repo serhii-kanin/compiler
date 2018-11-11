@@ -29,7 +29,7 @@ class Token
     public const TYPE_DATA_TYPE_KEYWORD = 'DATA_TYPE_KEYWORD';
     public const TYPE_COMMA = 'COMMA';
     public const TYPE_VOID = 'VOID';
-
+    public const TYPE_RETURN = 'RETURN';
 
     private const AVAILABLE_TYPES = [
         Token::TYPE_DATA_TYPE_KEYWORD,
@@ -56,6 +56,7 @@ class Token
         Token::TYPE_COLON,
         Token::TYPE_COMMA,
         Token::TYPE_VOID,
+        Token::TYPE_RETURN
     ];
 
     /**
@@ -203,6 +204,11 @@ class Token
     public function isComma()
     {
         return $this->type == Token::TYPE_COMMA;
+    }
+
+    public function isReturn()
+    {
+        return $this->type == Token::TYPE_RETURN;
     }
 
     public function getValueAttribute(): ?string

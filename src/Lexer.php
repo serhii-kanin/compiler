@@ -13,16 +13,18 @@ class Lexer
     private const WHILE_EXPR = '/^(?<token>while)(?:\s*\()/i';
 
     private const FUNCTION_EXPR = '/^(?<token>function)(?:\s+)/i';
+
+    private const RETURN_EXPR = '/^(?<token>return)(?:\s|;)/i';
+
     private const IF_REGEXP = '/^(?<token>if)(?:\s*\()/';
     private const ELSE_REGEXP = '/^(?<token>else)(?:\s*\{)/i';
     private const LEFT_CURLY_BRACKET = '/^(?<token>\{)/';
     private const RIGHT_CURLY_BRACKET = '/^(?<token>\})/';
     private const INT_REGEXP = '/^(?<token>[1-9]+[0-9]*)/';
     private const FLOAT_REGEXP = '/^(?<token>[0-9]+\.[0-9]+)/';
-    private const STRING_REGEXP = '/^(?<token>\"[^"]*?\")/';
     private const BOOL_REGEXP = '/^(?<token>false|true)(?:\W)/i';
     private const DATA_TYPE_KEYWORD_REGEXP = '/^(?<token>int|float|string|bool)(?:\s+)/i';
-    private const VOID_REGEXP = '/^(?<token>void)(?:\s*\{?)/i';
+    private const VOID_REGEXP = '/^(?<token>void)(?:\s*\{)/i';
     private const ID_REGEXP = '/^(?<token>[0-9]*[a-z]{1,}[a-z0-9_]*)/i';
     private const OP_REGEXP = '/^(?<token>[\/\*\+\-])/';
     private const SPACE_REGEXP = '/^(?<token>\s+)/';
@@ -35,8 +37,8 @@ class Lexer
 
     private const REGEXPS = [
         Lexer::FUNCTION_EXPR => Token::TYPE_FUNCTION,
+        Lexer::RETURN_EXPR => Token::TYPE_RETURN,
         Lexer::VOID_REGEXP => Token::TYPE_VOID,
-        Lexer::STRING_REGEXP => Token::TYPE_STRING,
         Lexer::WHILE_EXPR => Token::TYPE_WHILE,
         Lexer::IF_REGEXP => Token::TYPE_IF,
         Lexer::ELSE_REGEXP => Token::TYPE_ELSE,
