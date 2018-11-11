@@ -8,6 +8,7 @@ use SK\Compiler\Node\ConstNode;
 use SK\Compiler\Node\ConditionNode;
 use SK\Compiler\Node\FunctionArgumentNode;
 use SK\Compiler\Node\FunctionDeclarationNode;
+use SK\Compiler\Node\InversionNode;
 use SK\Compiler\Node\ReturnNode;
 use SK\Compiler\Node\LogicalOperatorNode;
 use SK\Compiler\Node\Node;
@@ -58,7 +59,7 @@ class Parser
             $statement = $this->condition();
         } elseif($this->lexer->getToken()->isFunction()) {
             /**
-             * Нельзя создавать функции в условных операторах
+             * Нельзя создавать функции в { }
              */
             if ($inCurlyBrackets) {
                 throw new UnexpectedSymbolException($this->lexer->getToken());
@@ -294,14 +295,13 @@ class Parser
     }
 
     /**
-     * <logical_and> && <test> | <test>
+     * <logical_and> && <inversion_or_test> | <inversion_or_test>
      * @return Node
      * @throws \Exception
      */
     private function logicalAndExpression(): Node
     {
         $expr = $this->testExpression();
-
         while (($token = $this->lexer->getToken()) && $token->isLogicalAnd()) {
             $this->lexer->moveToNext();
             $expr = new LogicalOperatorNode($token->getValueAttribute(), $expr, $this->testExpression());
@@ -356,6 +356,18 @@ class Parser
      * @throws \Exception
      */
     private function term(): Node
+    {
+        if ($this->lexer->getToken()->isInversion()) {
+            $this->lexer->moveToNext();
+            return new InversionNode($this->value());
+        }
+        return $this->value();
+    }
+    /**
+     * @return Node
+     * @throws \Exception
+     */
+    private function value(): Node
     {
         $token = $this->lexer->getToken();
 
@@ -466,7 +478,10 @@ sub_and_add -> <mul_and_div> - <mul_and_div> | <mul_and_div> + <mul_and_div> | <
 
 mul_and_div -> <term> * <term> | <term> / <term> | <term>
 
-term -> <primitive_data_type> | <id> | <enclosed_expr>
+term -> <inverse_term> | <value>
+inverse_term -> !<value> | <value>
+
+value -> <primitive_data_type> | <id> | <enclosed_expr>
 primitive_data_type -> <int> | <float> | <bool> | <string>
 
 string -> "[^"]*"

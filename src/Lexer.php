@@ -31,6 +31,7 @@ class Lexer
     private const LEFT_ROUND_BRACKET = '/^(?<token>\()/';
     private const RIGHT_ROUND_BRACKET = '/^(?<token>\))/';
     private const TEST_EQUAL_REGEXP = '/^(?<token>(==|\!=|>=?|=<|<))/';
+    private const INVERSION_REGEXP = '/^(?<token>\!)/';
     private const ASSIGN_REGEXP = '/^(?<token>=)/';
     private const LOGICAL_AND_REGEXP = '/^(?<token>&&)/';
     private const LOGICAL_OR_REGEXP = '/^(?<token>\|\|)/';
@@ -49,6 +50,7 @@ class Lexer
         Lexer::LEFT_ROUND_BRACKET => Token::TYPE_LEFT_ROUND_BRACKET,
         Lexer::RIGHT_ROUND_BRACKET => Token::TYPE_RIGHT_ROUND_BRACKET,
         Lexer::TEST_EQUAL_REGEXP => Token::TYPE_TEST,
+        Lexer::INVERSION_REGEXP => Token::TYPE_INVERSION,
         Lexer::LOGICAL_AND_REGEXP => Token::TYPE_LOGICAL_AND,
         Lexer::LOGICAL_OR_REGEXP => Token::TYPE_LOGICAL_OR,
         Lexer::ASSIGN_REGEXP => Token::TYPE_ASSIGN,

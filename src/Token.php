@@ -30,6 +30,7 @@ class Token
     public const TYPE_COMMA = 'COMMA';
     public const TYPE_VOID = 'VOID';
     public const TYPE_RETURN = 'RETURN';
+    public const TYPE_INVERSION = 'INVERSION';
 
     private const AVAILABLE_TYPES = [
         Token::TYPE_DATA_TYPE_KEYWORD,
@@ -56,7 +57,8 @@ class Token
         Token::TYPE_COLON,
         Token::TYPE_COMMA,
         Token::TYPE_VOID,
-        Token::TYPE_RETURN
+        Token::TYPE_RETURN,
+        Token::TYPE_INVERSION
     ];
 
     /**
@@ -211,10 +213,16 @@ class Token
         return $this->type == Token::TYPE_RETURN;
     }
 
+    public function isInversion()
+    {
+        return $this->type == Token::TYPE_INVERSION;
+    }
+
     public function getValueAttribute(): ?string
     {
         return isset($this->attributes['value']) ? $this->attributes['value']: null;
     }
+
 
     public function getType(): string
     {
