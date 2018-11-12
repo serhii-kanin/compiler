@@ -440,10 +440,10 @@ class Parser
     {
         $operand1 = $this->term();
         $operator = $this->lexer->getToken();
-        if ($operator->isOperator() && ($operator->getValueAttribute() == '*' || $operator->getValueAttribute() == '/')) {
-            $operator = $operator->getValueAttribute();
+        while ($operator->isOperator() && ($operator->getValueAttribute() == '*' || $operator->getValueAttribute() == '/')) {
             $this->lexer->moveToNext();
-            return new MathOperatorNode($operator, $operand1, $this->term());
+            $operand1 = new MathOperatorNode($operator->getValueAttribute(), $operand1, $this->term());
+            $operator = $this->lexer->getToken();
 
         }
         return $operand1;
@@ -464,7 +464,7 @@ function_declaration -> function <id> (<function_arguments>): <return_type_keywo
 
 enclosed_expr -> (<expr>)
 
-expr -> <logical_and>
+expr -> <logical_or>
 
 var_declaration -> <data_type_keyword> <id>; | <data_type_keyword> <id> = <expr>;
 
