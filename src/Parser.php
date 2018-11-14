@@ -421,15 +421,40 @@ class Parser
      */
     private function mathAddOrSub(): Node
     {
-        $operand1 = $this->mathMulOrDiv();
+        $queue = new \SplPriorityQueue();
+
+        $mathOpPriority = 1000000;
+        $op1 = $this->mathMulOrDiv();
+        if ($op1 instanceof MathOperatorNode) {
+            $queue->insert($op1, $mathOpPriority--);
+        } else {
+            $queue->insert($op1, 0);
+        }
+
+        $oprators = [];
         $operator = $this->lexer->getToken();
+
         while ($operator->isOperator() && ($operator->getValueAttribute() == '+' || $operator->getValueAttribute() == '-')) {
+
             $this->lexer->moveToNext();
-            $operand1 = new MathOperatorNode($operator->getValueAttribute(), $operand1, $this->mathMulOrDiv());
+            $op2 = $this->mathMulOrDiv();
+            $oprators[spl_object_hash($op1)][spl_object_hash($op2)] = $operator;
+            if ($op2 instanceof MathOperatorNode) {
+                $queue->insert($op2, $mathOpPriority--);
+            } else {
+                $queue->insert($op2, 0);
+            }
+            $op1 = $op2;
             $operator = $this->lexer->getToken();
         }
 
-        return $operand1;
+        $op1 = $queue->current();
+        $queue->next();
+        while ($op2 = $queue->current()) {
+            $op1 = new MathOperatorNode('+',new MathOperatorNode('+', $op1, new ConstNode('int', 0)), $op2);
+            $queue->next();
+        }
+        return $op1;
     }
 
     /**

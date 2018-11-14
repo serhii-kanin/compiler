@@ -17,7 +17,7 @@ bool suka = 1+1;
 } else { bool suka = 1 + 2;}');
  */
 
-$lexer = new \SK\Compiler\Lexer('1 + 1 - 1 - 2 * 3 * 4 * 5;');
+$lexer = new \SK\Compiler\Lexer('1 * 2 + 3 * 4 + 5 * 6 + 7 * 8;');
 
 
 print_r((new \SK\Compiler\Parser($lexer))->parse());
